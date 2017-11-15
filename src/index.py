@@ -4,9 +4,11 @@ titles = []
 lines = []
 ent_dict = {}
 
-def pt_idx(fn, fnidx_t, fnidx_p):
+def pt_idx(fn, fnidx_t, fnidx_p, fnidx_bp):
     set_p = set()
     set_t = set()
+    set_bp = set()
+
     with open(fn, 'r') as ent_in:
         global titles, lines, ent_dict
         titles = ent_in.readline()
@@ -15,20 +17,27 @@ def pt_idx(fn, fnidx_t, fnidx_p):
             line = line.split(',')
             set_p.add(line[0])
             set_t.add(line[1])
+            set_bp.add(line[4])
 
     ent_pl = list(set_p)
     ent_tl = list(set_t)
+    ent_bp = list(set_bp)
     ent_pl.sort()
     ent_tl.sort()
+    ent_bp.sort()
 
     ent_dict_p = dict(zip(ent_pl, [i for i in range(len(ent_pl))]))
     ent_dict_t = dict(zip(ent_tl, [i for i in range(len(ent_tl))]))
-    print(ent_dict_p)
+    ent_dict_bp = dict(zip(ent_bp, [i for i in range(len(ent_bp))]))
+
     with open(fnidx_p, 'wb') as player:
         player.write(pickle.dumps(ent_dict_p))
 
     with open(fnidx_t, 'wb') as team:
         team.write(pickle.dumps(ent_dict_t))
+
+    with open(fnidx_bp, 'wb') as birthplace:
+        birthplace.write(pickle.dumps(ent_dict_bp))
         
 
 def handle(fn):
@@ -78,7 +87,7 @@ def rel_idx(fn_idx):
 
 
 if __name__ == '__main__':
-    pt_idx('../origin_data/line', '../index/player', '../index/player')
+    pt_idx('../origin_data/line', '../index/team', '../index/player', '../index/birthplace')
     # handle('../origin_data/line')
     # ent_idx('../index/ent.idx')
     # rel_idx('../index/ret.idx')
