@@ -45,7 +45,6 @@ def build_mat(fn, fnmat, fninfo):
             time_scope = line[-2:]
             pos = line[2]
             if matrix[i][j] != 0:
-                print(matrix[i][j])
                 matrix[i][j]['time_scope'].append(time_scope)
                 matrix[i][j]['position'].append(pos)
             else:
