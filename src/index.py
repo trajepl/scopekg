@@ -32,12 +32,18 @@ def pt_idx(fn, fnidx_t, fnidx_p, fnidx_bp):
 
     with open(fnidx_p, 'wb') as player:
         player.write(pickle.dumps(ent_dict_p))
+    with open(fnidx_p+'_l', 'wb') as player:
+        player.write(pickle.dumps(ent_pl))
 
     with open(fnidx_t, 'wb') as team:
         team.write(pickle.dumps(ent_dict_t))
+    with open(fnidx_t+'_l', 'wb') as team:
+        team.write(pickle.dumps(ent_tl))
 
     with open(fnidx_bp, 'wb') as birthplace:
         birthplace.write(pickle.dumps(ent_dict_bp))
+    with open(fnidx_bp+'_l', 'wb') as birthplace:
+        birthplace.write(pickle.dumps(ent_bp))
         
 
 def handle(fn):
