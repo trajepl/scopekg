@@ -18,6 +18,19 @@ def run_time(func):
     return wrapper
 
 def init(fn_p, fn_t):
+    """
+    params
+        fn_p: filename of player
+        fn_t: filename of team
+    func
+        init matrix(1) and info_matrix(2)
+        1. 
+            - relationship between player and team (p*t)
+            - matrix[i][j] = {key: [value]} (not unique value)
+        2. 
+            - relationship between player and their birthday(0) and birthplace(1)
+            - info_matrix[i][j] = value (unique value)
+    """
     global matrix, info_matrix, player, team
     with open(fn_p, 'rb') as mat_in_p:
         player = mat_in_p.read()
@@ -34,6 +47,16 @@ def init(fn_p, fn_t):
     info_matrix = [[0 for i in range(2)] for j in range(len_p)]
 
 def build_mat(fn, fnmat, fninfo):
+    """
+    params
+        fn: filename of orgin data
+        fnmat: filename of matrix
+        fninfo: filename of info_matrix
+    func
+        - fill value into matrix and info_matrix based on origin file
+        - dumps matrix(fill-after) and info_matrix(fill-after) to file
+
+    """
     global matrix, info_matrix
     with open(fn, 'r') as mat_in:
         mat_in.readline()
@@ -66,8 +89,15 @@ def build_mat(fn, fnmat, fninfo):
             
 @run_time
 def query(head, rel, tail, timestamp):
-    """
-
+    """ 
+    params
+        head: ...
+        ret: ...
+        timestamp: ...
+    func
+        ...
+    return
+        ...
     """
     pass
 
