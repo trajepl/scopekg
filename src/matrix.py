@@ -6,6 +6,8 @@ team = []
 
 matrix = []
 info_matrix = []
+time_list = []
+time_index = []
 info_len = 2
 
 def run_time(func):
@@ -94,15 +96,38 @@ def build_mat(fn, fnmat, fninfo):
         pickle.dump(info_matrix, mat_out)
         mat_out.close()
 
+
+def build_time(fn):
+    global time_list, time_index
+    with open(fn, 'r') as time_in:
+        time_in.readline()
+        first = True
+        idx = 0
+        for line in time_in.readlines():
+            time_list.append(line)
+            if first:
+                time_index.append(idx) 
+                tmp_line = line.strip().split(',')
+                first = False
+            else:
+                tmp_line_cnt = line.strip().split(',')
+                if tmp_line_cnt[-2:] != tmp_line[-2:]:
+                    time_index.append(idx)
+                    tmp_line = tmp_line_cnt
+            idx += 1
+    
+
 def write_file(fn,results):
     with open(fn,'w') as fn_out:
         for result in results:
             line =','.join(result)
             fn_out.write(line+'\n')
 
+
 def record_cnt(fn, cnt):
     with open(fn, 'w') as record_out:
         record_out.write(str(cnt))
+
 
 @run_time
 def query_head(fn_h,fn_hw):
@@ -125,28 +150,61 @@ def query_head(fn_h,fn_hw):
     print(cnt)    
     record_cnt(fn_hw, cnt)
 
+# @run_time
+# def query_rel(fn_r,fn_rw):
+#     lines_rel = []
+#     query_result = []
+#     cnt = 0
+
+#     with open(fn_r,'r') as rel_in :
+#         lines_rel = rel_in.readlines()
+
+#     for line_r in lines_rel :
+#         line_r = line_r.strip('\n').split(',')
+#         for key1 in player.keys():
+#             i = player[key1]
+#             for key2 in team.keys():
+#                 j = team[key2]
+#                 if matrix[i][j] != 0:
+#                     for k in range(len(matrix[i][j]['time_scope'])):
+#                         scope_t = matrix[i][j]['time_scope'][k]
+#                         if is_overlap(line_r, scope_t):
+#                             cnt += 1
+#                         # if line_r[0] >= matrix[i][j]['time_scope'][k][0] and line_r[1] <= matrix[i][j]['time_scope'][k][1] :
+#                             # query_result.append([key1,key2,matrix[i][j]['time_scope'][k][0],matrix[i][j]['time_scope'][k][1]])
+#     print(cnt)
+#     record_cnt(fn_rw, cnt)
+
 @run_time
-def query_rel(fn_r,fn_rw) :
-    lines_rel = []
-    query_result = []
+def query_rel(fn_r, fn_rw):
+    global time_list,time_index
+    time_list.append('a,a,a,0000,b,9999,9999')
+    time_index.append(len(time_list) - 1)
+
+
     cnt = 0
-
-    with open(fn_r,'r') as rel_in :
-        lines_rel = rel_in.readlines()
-
-    for line_r in lines_rel :
-        line_r = line_r.strip('\n').split(',')
-        for key1 in player.keys():
-            i = player[key1]
-            for key2 in team.keys():
-                j = team[key2]
-                if matrix[i][j] != 0:
-                    for k in range(len(matrix[i][j]['time_scope'])):
-                        scope_t = matrix[i][j]['time_scope'][k]
-                        if is_overlap(line_r, scope_t):
-                            cnt += 1
-                        # if line_r[0] >= matrix[i][j]['time_scope'][k][0] and line_r[1] <= matrix[i][j]['time_scope'][k][1] :
-                            # query_result.append([key1,key2,matrix[i][j]['time_scope'][k][0],matrix[i][j]['time_scope'][k][1]])
+    idx_list = []
+    with open (fn_r,'r') as r_in :
+        lines_r = r_in.readlines()
+    
+    for time_scope in lines_r:
+        time_scope = time_scope.strip().split(',')
+        tmp_pos = 0
+        idx_list = []
+        for pos in time_index:
+            line = time_list[pos].strip().split(',')
+            if line[-1] < time_scope[0]:
+                idx_list.append(pos)
+                cnt += idx_list[-1] - idx_list[0]
+                idx_list = []
+                continue
+            elif time_scope[1] >= line[-2]:
+                idx_list.append(pos)
+            else:
+                idx_list.append(pos)
+                break 
+        cnt += idx_list[-1] - idx_list[0]
+    
     print(cnt)
     record_cnt(fn_rw, cnt)
     
@@ -203,6 +261,7 @@ def query_htr(fn_htr,fn_htrw) :
 if __name__ == '__main__':
     init('../index/player', '../index/team')
     build_mat('../origin_data/line', '../index/matrix', '../index/info_matrix')
+    build_time('../origin_data/time_line')
     query_head('../test_data/head','../result_data/query_h2')
     query_rel('../test_data/rel','../result_data/query_rel2')
     query_hr('../test_data/head_rel','../result_data/query_hr2')
