@@ -86,6 +86,6 @@ if __name__ == '__main__':
     t_fn_ht_r = '../test_data/head_rel'
     t_fn_htr = '../test_data/htr'
     # ht_data(fn_h, t_fn_h)
-    # r_date(fn, t_fn_r)
+    r_date(fn, t_fn_r)
     # ht_r_data(fn_h, fn, t_fn_ht_r)
-    htr_data(fn_h, fn_t, fn, t_fn_htr)
+    # htr_data(fn_h, fn_t, fn, t_fn_htr)
