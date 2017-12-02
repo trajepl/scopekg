@@ -1,9 +1,20 @@
+import sys
+import time
 import random
 import pickle
 
 num_query = 10000
 step = 10 # the number of team is limited
 gap = num_query // step
+
+def run_time(func):
+    def wrapper(*argv):
+        s = time.time()
+        f = func(*argv)
+        e = time.time()
+        print(func.__name__ + ' runtime: ' + str(e-s))
+        return f
+    return wrapper
 
 def time_scope(fn):
     maxt = 0
@@ -74,18 +85,24 @@ def htr_data(fn_h, fn_t, fn, fn_htr):
             line = ','.join(query)
             ht_r_out.write(line + '\n')
 
+@run_time
+def run():
+    if len(sys.argv) < 2:
+        print('need file path of orginal dataset.')
+    else:
+        fn = sys.argv[1]
+        fn_h = '../index/player_l'
+        fn_t = '../index/team_l'
+
+        t_fn_h = '../test_data/head'
+        t_fn_t = '../test_data/tail'
+        t_fn_r = '../test_data/rel'
+        t_fn_ht_r = '../test_data/head_rel'
+        t_fn_htr = '../test_data/htr'
+        ht_data(fn_h, t_fn_h)
+        r_date(fn, t_fn_r)
+        ht_r_data(fn_h, fn, t_fn_ht_r)
+        htr_data(fn_h, fn_t, fn, t_fn_htr)
 
 if __name__ == '__main__':
-    fn = '../origin_data/line'
-    fn_h = '../index/player_l'
-    fn_t = '../index/team_l'
-
-    t_fn_h = '../test_data/head'
-    t_fn_t = '../test_data/tail'
-    t_fn_r = '../test_data/rel'
-    t_fn_ht_r = '../test_data/head_rel'
-    t_fn_htr = '../test_data/htr'
-    # ht_data(fn_h, t_fn_h)
-    r_date(fn, t_fn_r)
-    # ht_r_data(fn_h, fn, t_fn_ht_r)
-    # htr_data(fn_h, fn_t, fn, t_fn_htr)
+    run()
