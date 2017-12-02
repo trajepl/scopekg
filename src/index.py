@@ -1,8 +1,20 @@
+import sys
+import time
 import pickle
 
 titles = []
 lines = []
 ent_dict = {}
+
+def run_time(func):
+    def wrapper(*argv):
+        s = time.time()
+        f = func(*argv)
+        e = time.time()
+        print(func.__name__ + ' runtime: ' + str(e-s))
+        return f
+    return wrapper
+
 
 def pt_idx(fn, fnidx_t, fnidx_p, fnidx_bp):
     set_p = set()
@@ -91,10 +103,17 @@ def rel_idx(fn_idx):
         for i in range(len(title_l)):
             rel_out.write(title_l[i].strip() + ',' + str(i) + '\n')
 
-
+@run_time
+def run():
+    if len(sys.argv) < 2:
+        print('need origin dataset file path')
+        return 0
+    fn = sys.argv[1]
+    pt_idx(fn, '../index/team', '../index/player', '../index/birthplace')
+    handle(fn)
+    ent_idx('../index/ent.idx')
+    rel_idx('../index/ret.idx')
+    update_eny('../index/graph.info')
+    
 if __name__ == '__main__':
-    pt_idx('../origin_data/line', '../index/team', '../index/player', '../index/birthplace')
-    # handle('../origin_data/line')
-    # ent_idx('../index/ent.idx')
-    # rel_idx('../index/ret.idx')
-    # update_eny('../index/graph.info')
+    run()
