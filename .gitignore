@@ -2,8 +2,11 @@ src/*pyc
 index/
 test_data/
 result_data/
-latex/llcsdoc/
 
+origin_data/
+!origin_data/line
+
+latex/llcsdoc/
 latex/llncs*
 latex/scopekg*
 !latex/scopekg.tex
