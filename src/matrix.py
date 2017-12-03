@@ -1,5 +1,6 @@
-import pickle
+import sys
 import time
+import pickle
 
 player = []
 team = []
@@ -257,12 +258,19 @@ def query_htr(fn_htr,fn_htrw) :
     print(cnt)
     record_cnt(fn_htrw, cnt)
 
+@run_time
+def run():
+    if len(sys.argv) < 2:
+        print('need file path of original dataset.')
+    else:
+        fn = sys.argv[1]
+        init('../index/player', '../index/team')
+        build_mat(fn, '../index/matrix', '../index/info_matrix')
+        build_time('../origin_data/time_line')
+        query_head('../test_data/head','../result_data/query_h2')
+        query_rel('../test_data/rel','../result_data/query_rel2')
+        query_hr('../test_data/head_rel','../result_data/query_hr2')
+        query_htr('../test_data/htr','../result_data/query_htr2')
 
 if __name__ == '__main__':
-    init('../index/player', '../index/team')
-    build_mat('../origin_data/line', '../index/matrix', '../index/info_matrix')
-    build_time('../origin_data/time_line')
-    query_head('../test_data/head','../result_data/query_h2')
-    query_rel('../test_data/rel','../result_data/query_rel2')
-    query_hr('../test_data/head_rel','../result_data/query_hr2')
-    query_htr('../test_data/htr','../result_data/query_htr2')
+    run()
