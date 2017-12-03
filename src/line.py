@@ -1,5 +1,6 @@
-import pickle
+import sys
 import time
+import pickle
 
 titles = []
 lines = []
@@ -121,10 +122,17 @@ def query_htr(fn_htr,fn_htrw) :
     print(cnt)
     record_cnt(fn_htrw, cnt)
 
+@run_time
+def run():
+    if len(sys.argv) < 2:
+        print('need file path of original dataset.')
+    else:
+        fn = sys.argv[1]
+        origin_data(fn)
+        query_head('../test_data/head','../result_data/query_h1')
+        query_rel('../test_data/rel','../result_data/query_rel1')
+        query_hr('../test_data/head_rel','../result_data/query_hr1')
+        query_htr('../test_data/htr','../result_data/query_htr1')
 
 if __name__ == '__main__':
-    origin_data('../origin_data/line')
-    query_head('../test_data/head','../result_data/query_h1')
-    query_rel('../test_data/rel','../result_data/query_rel1')
-    query_hr('../test_data/head_rel','../result_data/query_hr1')
-    query_htr('../test_data/htr','../result_data/query_htr1')
+    run()
