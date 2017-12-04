@@ -21,7 +21,7 @@ echo 'index...' > ../result_data/ret_100w
 python index.py ../origin_data/line_100w >> ../result_data/ret_100w
 echo 'create test data...' >> ../result_data/ret_100w
 python tdata.py ../origin_data/line_100w >> ../result_data/ret_100w
-# python line.py ../origin_data/line_10w >> ../result_data/ret_10w
+# python line.py ../origin_data/line_100w >> ../result_data/ret_100w
 echo 'four query...' >> ../result_data/ret_100w
 python matrix.py ../origin_data/line_100w >> ../result_data/ret_100w
 
@@ -29,6 +29,6 @@ echo 'index...' > ../result_data/ret_1kw
 python index.py ../origin_data/line_1kw >> ../result_data/ret_1kw
 echo 'create test data...' >> ../result_data/ret_1kw
 python tdata.py ../origin_data/line_1kw >> ../result_data/ret_1kw
-# python line.py ../origin_data/line_10w >> ../result_data/ret_10w
+# python line.py ../origin_data/line_1kw >> ../result_data/ret_1kw
 echo 'four query...' >> ../result_data/ret_1kw
 python matrix.py ../origin_data/line_1kw >> ../result_data/ret_1kw
