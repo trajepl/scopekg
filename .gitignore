@@ -2,6 +2,7 @@ src/*pyc
 index/
 test_data/
 result_data/
+src/*sh
 
 origin_data/
 !origin_data/line
