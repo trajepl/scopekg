@@ -148,33 +148,33 @@ def query_head(fn_h,fn_hw):
                     cnt += 1
                     # query_result.append([line_h.strip('\n'),key,matrix[i][j]['time_scope'][k][0],matrix[i][j]['time_scope'][k][1]])
     # write_file(fn_hw,query_result)
-    print(cnt)    
+    # print(cnt)    
     record_cnt(fn_hw, cnt)
 
-# @run_time
-# def query_rel(fn_r,fn_rw):
-#     lines_rel = []
-#     query_result = []
-#     cnt = 0
+@run_time
+def query_rel_no_idx(fn_r,fn_rw):
+    lines_rel = []
+    query_result = []
+    cnt = 0
 
-#     with open(fn_r,'r') as rel_in :
-#         lines_rel = rel_in.readlines()
+    with open(fn_r,'r') as rel_in :
+        lines_rel = rel_in.readlines()
 
-#     for line_r in lines_rel :
-#         line_r = line_r.strip('\n').split(',')
-#         for key1 in player.keys():
-#             i = player[key1]
-#             for key2 in team.keys():
-#                 j = team[key2]
-#                 if matrix[i][j] != 0:
-#                     for k in range(len(matrix[i][j]['time_scope'])):
-#                         scope_t = matrix[i][j]['time_scope'][k]
-#                         if is_overlap(line_r, scope_t):
-#                             cnt += 1
-#                         # if line_r[0] >= matrix[i][j]['time_scope'][k][0] and line_r[1] <= matrix[i][j]['time_scope'][k][1] :
-#                             # query_result.append([key1,key2,matrix[i][j]['time_scope'][k][0],matrix[i][j]['time_scope'][k][1]])
-#     print(cnt)
-#     record_cnt(fn_rw, cnt)
+    for line_r in lines_rel :
+        line_r = line_r.strip('\n').split(',')
+        for key1 in player.keys():
+            i = player[key1]
+            for key2 in team.keys():
+                j = team[key2]
+                if matrix[i][j] != 0:
+                    for k in range(len(matrix[i][j]['time_scope'])):
+                        scope_t = matrix[i][j]['time_scope'][k]
+                        if is_overlap(line_r, scope_t):
+                            cnt += 1
+                        # if line_r[0] >= matrix[i][j]['time_scope'][k][0] and line_r[1] <= matrix[i][j]['time_scope'][k][1] :
+                            # query_result.append([key1,key2,matrix[i][j]['time_scope'][k][0],matrix[i][j]['time_scope'][k][1]])
+    # print(cnt)
+    record_cnt(fn_rw, cnt)
 
 @run_time
 def query_rel(fn_r, fn_rw):
@@ -206,7 +206,7 @@ def query_rel(fn_r, fn_rw):
                 break 
         cnt += idx_list[-1] - idx_list[0]
     
-    print(cnt)
+    # print(cnt)
     record_cnt(fn_rw, cnt)
     
 
@@ -231,7 +231,7 @@ def query_hr(fn_hr,fn_hrw) :
                         cnt += 1
                     # if line_hr[1] >= matrix[i][j]['time_scope'][k][0] and line_hr[2] <= matrix[i][j]['time_scope'][k][1] :
                         # query_result.append([line_hr[0],key,matrix[i][j]['time_scope'][k][0],matrix[i][j]['time_scope'][k][1]])
-    print(cnt)
+    # print(cnt)
     record_cnt(fn_hrw, cnt)
     
 
@@ -255,7 +255,7 @@ def query_htr(fn_htr,fn_htrw) :
                     cnt += 1
     #             if line_htr[2] >= matrix[i][j]['time_scope'][k][0] and line_htr[3] <= matrix[i][j]['time_scope'][k][1]:
     #                 query_result.append([line_htr[0], line_htr[1], matrix[i][j]['time_scope'][k][0], matrix[i][j]['time_scope'][k][1]])
-    print(cnt)
+    # print(cnt)
     record_cnt(fn_htrw, cnt)
 
 @run_time
@@ -268,7 +268,7 @@ def run():
         build_mat(fn, '../index/matrix', '../index/info_matrix')
         build_time('../origin_data/time_line')
         query_head('../test_data/head','../result_data/query_h2')
-        query_rel('../test_data/rel','../result_data/query_rel2')
+        query_rel_no_idx('../test_data/rel','../result_data/query_rel2')
         query_hr('../test_data/head_rel','../result_data/query_hr2')
         query_htr('../test_data/htr','../result_data/query_htr2')
 
