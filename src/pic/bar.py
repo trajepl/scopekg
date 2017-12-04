@@ -28,12 +28,11 @@ def autoax(ax, title, data):
     rects1 = ax.bar(ind, data, width, color='lightblue')
 
     # add some text for labels, title and axes ticks
-    ax.set_ylabel('Time/s')
-    ax.set_xlabel('Data/log')
+    ax.set_ylabel('Time(s)')
+    ax.set_xlabel('Data(log)')
     ax.set_title(title)
     ax.set_xticks(ind + width / 2)
     ax.set_xticklabels(('1', '2', '3'))
-
 
 def autolabel(ax, rects):
     """
@@ -44,7 +43,6 @@ def autolabel(ax, rects):
         ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
                 '%d' % int(height),
                 ha='center', va='bottom')
-
 
 def barchar(data):
     fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=(18,4))
@@ -57,7 +55,51 @@ def barchar(data):
 
     plt.show()
 
+def autoline(data, ax, title, i):
+    x = [0, 1, 2, 3]
+    y = data
+    print(y)
+    group_labels = ['0', '1', '2', '3']  
+
+    ax.set_title(title)
+    ax.set_xlabel('Data size(log)')
+    ax.set_ylabel('Time(x)')
+    ax.plot(x, [0] + data[0][i], 'g-', label='baseline', marker='o')
+    ax.plot(x, [0] + data[1][i], 'r-', label='no-time-idx', marker='*')
+    ax.plot(x, [0] + data[2][i], 'b--', label='time-idx', marker='+')
+    ax.set_xticks(x, group_labels)
+    ax.legend(bbox_to_anchor=[0.5, 1]) 
+    
+    
+
+def point_line(data):
+    fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=(18,4))
+    autoline(data, ax1, 'HT', 0)
+    autoline(data, ax2, 'REL', 1)
+    autoline(data, ax3, 'HR', 2)
+    autoline(data, ax4, 'HRT', 3)
+    plt.show()
+    
+
+
 if __name__ == '__main__':
+    data = import_data('../../result_data/ret_line')
+    data = handle_data(data, 4)
+    barchar(data)
+
     data = import_data('../../result_data/ret_matrix')
     data = handle_data(data, 4)
     barchar(data)
+
+    data = import_data('../../result_data/ret_matrix_no_index')
+    data = handle_data(data, 4)
+    barchar(data)
+
+    data1 = import_data('../../result_data/ret_line')
+    data1 = handle_data(data1, 4)
+    data2 = import_data('../../result_data/ret_matrix_no_index')
+    data2 = handle_data(data2, 4)
+    data3 = import_data('../../result_data/ret_matrix')
+    data3 = handle_data(data3, 4)
+    data = [data1, data2, data3]
+    point_line(data)
