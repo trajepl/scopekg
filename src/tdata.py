@@ -41,7 +41,6 @@ def ht_data(fn, fn_ht=''):
         for sample in ht_sample:
             with open(fn_ht, 'a') as rel_out:
                 rel_out.write(sample + '\n')
-    
     return ht_sample
 
 def r_date(fn, fn_r=''):
@@ -90,6 +89,12 @@ def run():
     if len(sys.argv) < 2:
         print('need file path of orginal dataset.')
     else:
+        if len(sys.argv) >=3:
+            global num_query, step, gap
+            num_query = int(sys.argv[-1])
+            step = 10 # the number of team is limited
+            gap = num_query // step
+
         fn = sys.argv[1]
         fn_h = '../index/player_l'
         fn_t = '../index/team_l'
