@@ -52,7 +52,7 @@ def query_head(fn_h,fn_hw) :
                 cnt += 1
                 # query_result.append([line[0],line[1],line[5],line[6]])
     # write_file(fn_hw,query_result)
-    print(cnt)
+    # print(cnt)
     record_cnt(fn_hw, cnt)
     
 
@@ -74,7 +74,7 @@ def query_rel(fn_r,fn_rw) :
                 cnt += 1
                 # ret_out.write(','.join([line[0],line[1],line[5],line[6]]) + '\n')
     # ret_out.close()
-    print(cnt)
+    # print(cnt)
     record_cnt(fn_rw, cnt)
 
 
@@ -97,7 +97,7 @@ def query_hr(fn_hr,fn_hrw) :
                     cnt += 1
                     # query_result.append([line[0],line[1],line[5],line[6]])
     # write_file(fn_hrw,query_result)
-    print(cnt)
+    # print(cnt)
     record_cnt(fn_hrw, cnt)
 
 @run_time
@@ -119,7 +119,7 @@ def query_htr(fn_htr,fn_htrw) :
                     cnt += 1
                     # query_result.append([line[0],line[1],line[5],line[6]])
     # write_file(fn_htrw,query_result)
-    print(cnt)
+    # print(cnt)
     record_cnt(fn_htrw, cnt)
 
 @run_time
