@@ -25,7 +25,7 @@ def handle_data(data, step):
 
 def autoax(ax, title, data, labelx=''):
     print(data)
-    rects1 = ax.bar(ind, data, width, align='edge', color='lightblue')
+    rects1 = ax.bar(ind, data, width, align='edge', color='green')
 
     # add some text for labels, title and axes ticks
     ax.set_ylabel(labelx)
