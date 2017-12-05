@@ -23,12 +23,12 @@ def handle_data(data, step):
             ret.append(data[i::step])
     return ret
 
-def autoax(ax, title, data):
+def autoax(ax, title, data, labelx=''):
     print(data)
-    rects1 = ax.bar(ind, data, width, color='lightblue')
+    rects1 = ax.bar(ind, data, width, align='edge', color='lightblue')
 
     # add some text for labels, title and axes ticks
-    ax.set_ylabel('Time(s)')
+    ax.set_ylabel(labelx)
     ax.set_xlabel('Data(log)')
     ax.set_title(title)
     ax.set_xticks(ind + width / 2)
@@ -46,7 +46,7 @@ def autolabel(ax, rects):
 
 def barchar(data):
     fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=(18,4))
-    autoax(ax1, 'HT', data[0])
+    autoax(ax1, 'HT', data[0], 'time(s)')
     autoax(ax2, 'REL', data[1])
     autoax(ax3, 'HR', data[2])
     autoax(ax4, 'HRT', data[3])
