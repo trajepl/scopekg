@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 N = 3
 ind = np.arange(N)  # the x locations for the groups
 width = 0.35       # the width of the bars
+fsize = 10
 
 def import_data(fn):
     ret = []
@@ -28,11 +29,12 @@ def autoax(ax, title, data, labelx=''):
     rects1 = ax.bar(ind, data, width, align='edge', color='green')
 
     # add some text for labels, title and axes ticks
-    ax.set_ylabel(labelx)
-    ax.set_xlabel('Data(log)')
+    ax.set_ylabel(labelx, fontsize=fsize)
+    ax.set_xlabel('Data(log)', fontsize=fsize)
     ax.set_title(title)
     ax.set_xticks(ind + width / 2)
-    ax.set_xticklabels(('1', '2', '3'))
+    ax.set_xticklabels(('1', '2', '3'), fontsize=fsize)
+    
 
 def autolabel(ax, rects):
     """
@@ -52,7 +54,6 @@ def barchar(data):
     autoax(ax4, 'HRT', data[3])
     # autolabel(rects1)
     # autolabel(rects2)
-
     plt.show()
 
 def autoline(data, ax, title, i):
