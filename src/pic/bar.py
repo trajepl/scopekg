@@ -2,38 +2,40 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 N = 3
-ind = np.arange(N)  # the x locations for the groups
+ind = np.array([5, 6, 7])  # the x locations for the groups
 width = 0.35       # the width of the bars
-fsize = 10
+fsize = 12
+format_f = 'pdf'
 
-def import_data(fn):
+def import_data(fn, kind='query'):
     ret = []
     with open(fn,  'r') as data_out:
         tmp_l = list()           
         for line in data_out.readlines():
-            if 'query' in line:
+            if kind in line:
                 time = line.strip().split(':')[-1]
                 time = float(time.strip())
                 ret.append(time)
     return ret
 
-def handle_data(data, step):
+
+def handle_data(data, step, dim=3):
     ret = []
-    for i in range(len(data)):
-        if len(data) > i + step + step:
-            ret.append(data[i::step])
+    for i in range(len(data) // dim):
+        ret.append(data[i::step])
     return ret
+
 
 def autoax(ax, title, data, labelx=''):
     print(data)
-    rects1 = ax.bar(ind, data, width, align='edge', color='green')
+    rects = ax.bar(ind, data, width, align='center', color='green')
 
     # add some text for labels, title and axes ticks
     ax.set_ylabel(labelx, fontsize=fsize)
     ax.set_xlabel('Data(log)', fontsize=fsize)
     ax.set_title(title)
-    ax.set_xticks(ind + width / 2)
-    ax.set_xticklabels(('1', '2', '3'), fontsize=fsize)
+    ax.set_xticks(ind)
+    # autolabel(ax, rects)
     
 
 def autolabel(ax, rects):
@@ -42,65 +44,108 @@ def autolabel(ax, rects):
     """
     for rect in rects:
         height = rect.get_height()
-        ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
-                '%d' % int(height),
+        ax.text(rect.get_x() + rect.get_width()/2., 1.0*height,
+                '%.4f' % height,
                 ha='center', va='bottom')
 
-def barchar(data):
-    fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=(18,4))
-    autoax(ax1, 'HT', data[0], 'time(s)')
-    autoax(ax2, 'REL', data[1])
-    autoax(ax3, 'HR', data[2])
-    autoax(ax4, 'HRT', data[3])
-    # autolabel(rects1)
-    # autolabel(rects2)
-    plt.show()
 
-def autoline(data, ax, title, i):
-    x = [0, 1, 2, 3]
+def barchar(data, fn):
+    plt.style.use('./tickstyle')
+    with plt.style.context(('./tickstyle')):
+        fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=(24,5))
+        autoax(ax1, 'HT', data[0], 'time(s)')
+        autoax(ax2, 'REL', data[1])
+        autoax(ax3, 'HR', data[2])
+        autoax(ax4, 'HRT', data[3])
+    # plt.show()
+    plt.savefig(fn, format=format_f)
+
+
+def autoline(data, ax, title, i, idx=True, ylabel=''):
     y = data
-    print(y)
+    # print(y)
     group_labels = ['0', '1', '2', '3']  
 
     ax.set_title(title)
     ax.set_xlabel('Data size(log)')
-    ax.set_ylabel('Time(x)')
-    ax.plot(x, [0] + data[0][i], 'g-', label='baseline', marker='o')
-    ax.plot(x, [0] + data[1][i], 'r-', label='no-time-idx', marker='*')
-    ax.plot(x, [0] + data[2][i], 'b--', label='time-idx', marker='+')
-    ax.set_xticks(x, group_labels)
+    ax.set_ylabel(ylabel)
+    if not idx:
+        x = [0,  1, 2, 3]
+        ax.plot(x, [0] + data[0][i], 'g-', label='baseline', marker='o')
+        ax.plot(x, [0] + data[1][i], 'r-', label='no-time-idx', marker='*')
+        ax.plot(x, [0] + data[2][i], 'b--', label='time-idx', marker='+')
+    else:
+        x = [0,  1, 2, 3, 4]
+        ax.plot(x, [0] + data[i][0], 'g-', label='10^5', marker='o')
+        ax.plot(x, [0] + data[i][1], 'r-', label='10^6', marker='*')
+        ax.plot(x, [0] + data[i][2], 'b--', label='10^7', marker='+')
+    # ax.set_xticks(x, group_labels)
     ax.legend(bbox_to_anchor=[0.5, 1]) 
     
     
-
-def point_line(data):
-    fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=(18,4))
-    autoline(data, ax1, 'HT', 0)
-    autoline(data, ax2, 'REL', 1)
-    autoline(data, ax3, 'HR', 2)
-    autoline(data, ax4, 'HRT', 3)
-    plt.show()
+def point_line(data, fn, idx=True):
+    plt.style.use('./tickstyle')
+    with plt.style.context(('./tickstyle')):
+        fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=(24,5))
+        autoline(data, ax1, 'HT', 0, idx, ylabel='time(s)')
+        autoline(data, ax2, 'REL', 1, idx)
+        autoline(data, ax3, 'HR', 2, idx)
+        autoline(data, ax4, 'HRT', 3, idx)
+    # plt.show()
+    plt.savefig(fn, format=format_f)
     
 
+def handle_data_q(datas):
+    datas = handle_data(datas, 4, 12)
+    ret = []
+    for data in datas:
+        list_t = [data[i:i+4] for i in range(0, len(data), 4)]
+        ret.append(list_t)
+
+    return ret
 
 if __name__ == '__main__':
-    data = import_data('../../result_data/ret_line')
-    data = handle_data(data, 4)
-    barchar(data)
+    query_num = '../../latex/pic/query.' + format_f
+    index = '../../latex/pic/index.' + format_f
+    baseline = '../../latex/pic/baseline.' + format_f
+    time = '../../latex/pic/time.' + format_f
+    time_idx = '../../latex/pic/time_idx.' + format_f
+    combine = '../../latex/pic/combine.'  + format_f
 
-    data = import_data('../../result_data/ret_matrix')
-    data = handle_data(data, 4)
-    barchar(data)
+    ret_line = '../../result_data/ret_line'
+    ret_matrix = '../../result_data/ret_matrix'
+    ret_matrix_q = '../../result_data/ret_matrix_q'
+    ret_matrix_no_index = '../../result_data/ret_matrix_no_index'
 
-    data = import_data('../../result_data/ret_matrix_no_index')
+    # method1: baseline
+    data = import_data(ret_line)
     data = handle_data(data, 4)
-    barchar(data)
+    barchar(data, baseline)
 
-    data1 = import_data('../../result_data/ret_line')
+    # method2: time
+    data = import_data(ret_matrix)
+    data = handle_data(data, 4)
+    barchar(data, time)
+
+    # method3: time index
+    data = import_data(ret_matrix_no_index)
+    data = handle_data(data, 4)
+    barchar(data, time_idx)
+
+    # method4: combine three methods 
+    data1 = import_data(ret_line)
     data1 = handle_data(data1, 4)
-    data2 = import_data('../../result_data/ret_matrix_no_index')
+    data2 = import_data(ret_matrix_no_index)
     data2 = handle_data(data2, 4)
-    data3 = import_data('../../result_data/ret_matrix')
+    data3 = import_data(ret_matrix)
     data3 = handle_data(data3, 4)
     data = [data1, data2, data3]
-    point_line(data)
+    point_line(data, combine, False)
+
+    data_q = import_data(ret_matrix_q)
+    data_q = handle_data_q(data_q)
+    point_line(data_q, query_num)
+
+    # index line bar
+    data_idx = import_data(ret_matrix_q, 'run runtime')
+    data_idx = data_idx[0::9]
