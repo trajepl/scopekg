@@ -268,7 +268,7 @@ def run():
         build_mat(fn, '../index/matrix', '../index/info_matrix')
         build_time('../origin_data/time_line')
         query_head('../test_data/head','../result_data/query_h2')
-        query_rel_no_idx('../test_data/rel','../result_data/query_rel2')
+        query_rel('../test_data/rel','../result_data/query_rel2')
         query_hr('../test_data/head_rel','../result_data/query_hr2')
         query_htr('../test_data/htr','../result_data/query_htr2')
 
