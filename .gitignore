@@ -1,8 +1,10 @@
-src/*pyc
 index/
 test_data/
 result_data/
+
+src/*pyc
 src/*sh
+src/pic/tickstyle
 
 origin_data/
 !origin_data/line
