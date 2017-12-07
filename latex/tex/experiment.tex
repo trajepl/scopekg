@@ -1,30 +1,112 @@
 % !TeX spellcheck=en_US
 
 \section{Experiment Result}\label{Experiment Result}
-In this section, we conduct extensive experiments on real-world trajectory datasets to study the performance of the proposed algorithms, by comparing the features of the generated trajectory dataset with the original dataset $\mathcal{D}$. All algorithms are implemented on a Core i5-3470 3.20GHz machine with 16GB memory and a windows platform.
+In this section, we conduct extensive experiments on dataset which is generated 
+randomly based on the information of some soccers player and their careers to 
+evaluate the proposed methods for storing, indexing and query processing in scope 
+query we porposed.
 
 \subsection{Dataset}
+We use the basic dataset in which per line describes that a soccker player serve a team
+at a short time interval. Besides, the basic dataset also contains some  extra information 
+such as the birthday of player and the his position in a soccer team and so on. The 
+structure of the dataset is described in Table \ref{basic_data}.
 
-In order to comprehensively display the performance of the proposed model FTS, we use a real-world trajectory dataset in Beijing, which contains 13245 taxi trajectories (1401413 GPS points) that collected from 1752 taxis during 1/10/2013-7/10/2013. Note that we use a $200\times400$ grid map on Beijing to generate 14500 new trajectories.
+\begin{table}
+	\centering
+	\caption{Soccer player information example}
+	\label{basic_data}
+	\begin{small}
+		\begin{tabular}{p{1.6cm}|p{2.5cm}|p{1.2cm}|p{1.3cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}}
+			\hline
+			Player & Team & Position & Birthday & Birth Place & Start Year & End Year\\ \hline
+			Ant & Houston Texans & DB & 1991 & Florida & 2016 & 2020 \\\hline
+			A.J. Edds & New York Jets & LB & 1987 & Iowa & 2014 & 2018 \\\hline
+			Korey Hall & Chicago Bears & DB & 1983 & Boise State & 2014 & 2015 \\\hline
+		\end{tabular}
+	\end{small}
+\end{table}
+
+In order to comprehensively display the performance of the proposed n methods for different query, 
+we extend the basic dataset to more big size which contains more entry about different soccer playsers.
+Different size of new generated datasets are described in Table \ref{gen_data}. Note that the number of 
+player in generated dataset is different in multiple experiments because of the randomness of generation 
+algorithms. We just show information of one dataset in our experiments.
+
+\begin{table}
+	\centering
+	\caption{Generated Dataset Description}
+	\label{gen_data}
+	\begin{small}
+		\begin{tabular}{p{4cm}|p{3cm}}
+			\hline
+			dataset number of entry  & number of player \\\hline
+			10,000 & 25,497 \\\hline
+			100,000 &  253,784 \\\hline
+			10,000,000 & 2,540,461 \\\hline
+		\end{tabular}
+	\end{small}
+\end{table}
 
 
-\subsection{Performance Evaluation}
-\subsubsection{Solutions}
-We evaluate the proposed algorithms by comparing the trajectory features of the given dataset $\mathcal{D}$ with that of synthesized trajectories. Following methods are used:   1) Baseline 1: random generation (RG), 2) Baseline 2: intersection partition (IP), 3) Approach 3: gene partition (GP). Moreover, we use Original to denote the given trajectory dataset $\mathcal{D}$.
+We implement storing, indexing and four kinds of queries processing as well as generate new dataset in Python.
+To make comparison, we use non-index query processing as a baseline, i.e., for the four kinds of queries, the 
+storage model is directly accessed and sequential scans are acrried out. And Then we use our hash methods in 
+memory and build index for time interval to process four kinds of queries. The experiments are conducted on a 
+PC with Intel Core i7-7700K CPU 4.20GHz Core 8, 16GB memory and 910GB disk on Linux version 4.14.3-1-ARCH.
 
-% \textbf{Distribution of length}. First of all, we compare the distribution of trajectory length between original dataset and generated datasets. Seen from Fig.\ref{dis of length bj}, RG performs worst and it is more likely to generate long trajectories, as this approach has no restriction during synthesis. IP performs better than RG, since we have proposed several functions to control each synthesis. Note that, GP performs best, since it has the most similar distribution to the original dataset. This is because GP decomposes trajectories reasonably, then it is more likely to synthesize similar trajectories.
-% \begin{figure}[H]
-% 	\centering
-% 	\includegraphics[width=1.0\textwidth]{figs/length_bj.eps}\\
-% 	\caption{Distribution of trajectory length in Beijing}
-% 	\label{dis of length bj}
-% \end{figure}
-% \begin{figure}[H]
-% 	\centering
-% 	\includegraphics[width=1.0\textwidth]{figs/speed_bj.eps}\\
-% 	\caption{Distribution of trajectory speed in Beijing}
-% 	\label{dis of speed bj}
-% \end{figure}
+\subsection{Baseline}
+In this part, we sum the time of four kinds of queries which processing 10 queries respectively. As show in 
+\ref{baseline}, the cost in queries have a sharp increase badly following the size of dataset increasing. The 
+ticks in X axis denote the logarithms of low 1000. It is obviously that the queries suffer poor performance in 
+baseline.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{pic/baseline.png}\\
+	\caption{Baseline: Four kinds of queries time}
+	\label{baseline}
+\end{figure}
+
+\subsection{Hash-based Query}
+After building hash index for players and teams, and loading the relaton existing in time interval into memory, 
+we evaluate the same benchmark as well as in method of baseline. The trend in \ref{time} looks similar in four 
+kinds of queries, but you should note that the triks in y axis have droped down less thatn one second from dozens of 
+seconds in query HT, HR, HRT. But for REL processing, the cost is stil too high because of if we want to get 
+what has happed in a time interval, we still need go through all the entry between players and teams.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{pic/time-idx.png}\\
+	\caption{Hash-based: Four kinds of queries time}
+	\label{time}
+\end{figure}
+
+\subsection{Index for Time Interval}
+We just build sequential index easily, the performance of REL query gets a lot improve which reduce time cost from 100-plus
+seconds to less than one second. For showing the extensibility of our, we add the number of query to 10000. As show in \ref{test-add},
+the model still just need less than one second.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{pic/time.png}\\
+	\caption{Index-time-interval: Four kinds of queries time}
+	\label{time-idx}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{pic/con.png}\\
+	\caption{Four kinds of queries time}
+	\label{test-add}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{pic/con.png}\\
+	\caption{Four kinds of queries time}
+	\label{con}
+\end{figure}
 
 % \textbf{Distribution of speed}. Speed is of critical importance to reflect the traffic conditions of a city and describe motion behaviors of moving objects. Shown in Fig.\ref{dis of speed bj}, most of historical trajectories have speed 3m/s-8m/s in Beijing. The distribution of speed of trajectories generated by RG is different from the given trajectories, and IP performs better than RG. The trajectory speed of GP concentrate on 4m/s-8m/s, which is similar to the original dataset.
 
@@ -73,7 +155,11 @@ We evaluate the proposed algorithms by comparing the trajectory features of the 
 % \end{figure}
 
 
-\subsubsection{Efficiency} We also evaluate the efficiency of the proposed methods by comparing the running time of them. Without surprise, the method RG needs least running time, as it just synthesizes crossing trajectories directly and the number of candidates is less than that of IP and GP. Furthermore, Table \ref{running time} shows GP is much more efficient than IP, since the number of sub-trajectories generated by GP is much less than that generated by IP shown in table \ref{number of sub-tra}. The supplement method needs less time. However, the features of speed of origin data may lose in generation.
+\subsubsection{Efficiency} We also evaluate the efficiency of the proposed methods 
+by comparing the running time of them. Without surprise, the method RG needs least 
+running time, as it just synthesizes crossing trajectories directly and the number 
+of candidates is less than that of IP and GP. Furthermore, Table \ref{running time} 
+shows GP is much more efficient than IP, since the number of sub-trajectories generated by GP is much less than that generated by IP shown in table \ref{number of sub-tra}. The supplement method needs less time. However, the features of speed of origin data may lose in generation.
 %, which shows the necessity of the optimization in Section \ref{Optimization}.
 \begin{table}[H]
 	\centering
