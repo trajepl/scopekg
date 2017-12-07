@@ -6,6 +6,7 @@ ind = np.array([5, 6, 7])  # the x locations for the groups
 width = 0.35       # the width of the bars
 fsize = 12
 format_f = 'pdf'
+fig_s = (24,5)
 
 def import_data(fn, kind='query'):
     ret = []
@@ -27,7 +28,6 @@ def handle_data(data, step, dim=3):
 
 
 def autoax(ax, title, data, labelx=''):
-    print(data)
     rects = ax.bar(ind, data, width, align='center', color='green')
 
     # add some text for labels, title and axes ticks
@@ -52,7 +52,7 @@ def autolabel(ax, rects):
 def barchar(data, fn):
     plt.style.use('./tickstyle')
     with plt.style.context(('./tickstyle')):
-        fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=(24,5))
+        fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=fig_s)
         autoax(ax1, 'HT', data[0], 'time(s)')
         autoax(ax2, 'REL', data[1])
         autoax(ax3, 'HR', data[2])
@@ -61,32 +61,44 @@ def barchar(data, fn):
     plt.savefig(fn, format=format_f)
 
 
-def autoline(data, ax, title, i, idx=True, ylabel=''):
+def autoline(data, ax, title, i, idx=True, xlabel='Data Size(log)', ylabel=''):
     y = data
-    # print(y)
     group_labels = ['0', '1', '2', '3']  
 
     ax.set_title(title)
-    ax.set_xlabel('Data size(log)')
+    ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     if not idx:
-        x = [0,  1, 2, 3]
+        x = [0,  5, 6, 7]
         ax.plot(x, [0] + data[0][i], 'g-', label='baseline', marker='o')
         ax.plot(x, [0] + data[1][i], 'r-', label='no-time-idx', marker='*')
         ax.plot(x, [0] + data[2][i], 'b--', label='time-idx', marker='+')
     else:
         x = [0,  1, 2, 3, 4]
+        ax.set_xlabel('Query Data Size(log)')
         ax.plot(x, [0] + data[i][0], 'g-', label='10^5', marker='o')
         ax.plot(x, [0] + data[i][1], 'r-', label='10^6', marker='*')
         ax.plot(x, [0] + data[i][2], 'b--', label='10^7', marker='+')
     # ax.set_xticks(x, group_labels)
     ax.legend(bbox_to_anchor=[0.5, 1]) 
-    
+
+
+def one_line_chat(data, fn, title='', xlabel='Data Size(log)', ylabel='time(s)'):
+    plt.style.use('./tickstyle')
+    with plt.style.context(('./tickstyle')):
+        fig, ax = plt.subplots()
+        ax.set_title(title)
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        x = [0, 5, 6, 7]
+        ax.plot(x, [0] + data, 'b-', marker='o')
+    plt.savefig(fn, format=format_f)
+        
     
 def point_line(data, fn, idx=True):
     plt.style.use('./tickstyle')
     with plt.style.context(('./tickstyle')):
-        fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=(24,5))
+        fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=fig_s)
         autoline(data, ax1, 'HT', 0, idx, ylabel='time(s)')
         autoline(data, ax2, 'REL', 1, idx)
         autoline(data, ax3, 'HR', 2, idx)
@@ -121,16 +133,19 @@ if __name__ == '__main__':
     data = import_data(ret_line)
     data = handle_data(data, 4)
     barchar(data, baseline)
+    print('baseline plot complete.')
 
     # method2: time
     data = import_data(ret_matrix)
     data = handle_data(data, 4)
     barchar(data, time)
+    print('time no index plot complete.')
 
     # method3: time index
     data = import_data(ret_matrix_no_index)
     data = handle_data(data, 4)
     barchar(data, time_idx)
+    print('time with index plot complete.')
 
     # method4: combine three methods 
     data1 = import_data(ret_line)
@@ -141,11 +156,15 @@ if __name__ == '__main__':
     data3 = handle_data(data3, 4)
     data = [data1, data2, data3]
     point_line(data, combine, False)
+    print('combine plot complete.')
 
     data_q = import_data(ret_matrix_q)
     data_q = handle_data_q(data_q)
     point_line(data_q, query_num)
+    print('Number of query data plot complete.')
 
     # index line bar
     data_idx = import_data(ret_matrix_q, 'run runtime')
     data_idx = data_idx[0::9]
+    one_line_chat(data_idx, index)
+    print('Index plot complete.')
