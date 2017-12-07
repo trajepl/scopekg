@@ -12,3 +12,5 @@ latex/llncs*
 latex/scopekg*
 !latex/scopekg.tex
 !latex/scopekg.ind
+
+latex/pic/*
