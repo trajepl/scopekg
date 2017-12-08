@@ -28,10 +28,10 @@ structure of the dataset is described in Table \ref{basic_data}.
 \end{table}
 
 In order to comprehensively display the performance of the proposed n methods for different query, 
-we extend the basic dataset to more big size which contains more entry about different soccer playsers.
-Different size of new generated datasets are described in Table \ref{gen_data}. Note that the number of 
-player in generated dataset is different in multiple experiments because of the randomness of generation 
-algorithms. We just show information of one dataset in our experiments.
+we extend the basic dataset generating new datasets which contains more entries about different 
+soccer players. Different size of new generated datasets are described in Table \ref{gen_data}. Note that 
+the number of players in generated dataset is different in multiple experiments because of the randomness 
+of generation algorithms.
 
 \begin{table}
 	\centering
@@ -49,63 +49,82 @@ algorithms. We just show information of one dataset in our experiments.
 \end{table}
 
 
-We implement storing, indexing and four kinds of queries processing as well as generate new dataset in Python.
-To make comparison, we use non-index query processing as a baseline, i.e., for the four kinds of queries, the 
-storage model is directly accessed and sequential scans are acrried out. And Then we use our hash methods in 
-memory and build index for time interval to process four kinds of queries. The experiments are conducted on a 
-PC with Intel Core i7-7700K CPU 4.20GHz Core 8, 16GB memory and 910GB disk on Linux version 4.14.3-1-ARCH.
+We implement storing, indexing and four kinds of basic queries processing as well as generating new dataset in Python.
+To make comparison, we use non-index query processing as a baseline, i.e., for the several basic kinds of queries, the 
+storage model is directly accessed and sequential scans are acrried out. And Then we use our hash methods in  memory 
+and build index for time interval to process queries. The experiments are conducted on a PC with Intel Core i7-7700K 
+CPU 4.20GHz Core 8, 16GB memory and 910GB disk on Linux version 4.14.3-1-ARCH.
 
 \subsection{Baseline}
-In this part, we sum the time of four kinds of queries which processing 10 queries respectively. As show in 
-\ref{baseline}, the cost in queries have a sharp increase badly following the size of dataset increasing. The 
-ticks in X axis denote the logarithms of low 1000. It is obviously that the queries suffer poor performance in 
+In this part, we sum the time of four kinds of queries which processing 10 queries respectively. As show in Fig.
+\ref{baseline}, the cost in queries have a sharp increase sadly following the size of dataset increasing. The 
+ticks in X axis denote the logarithms of low 10. It is obviously that the queries suffer poor performance in 
 baseline.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.0\textwidth]{pic/baseline.png}\\
+	\includegraphics[width=1.0\textwidth]{pic/baseline.pdf}\\
 	\caption{Baseline: Four kinds of queries time}
 	\label{baseline}
 \end{figure}
 
-\subsection{Hash-based Query}
-After building hash index for players and teams, and loading the relaton existing in time interval into memory, 
-we evaluate the same benchmark as well as in method of baseline. The trend in \ref{time} looks similar in four 
-kinds of queries, but you should note that the triks in y axis have droped down less thatn one second from dozens of 
-seconds in query HT, HR, HRT. But for REL processing, the cost is stil too high because of if we want to get 
-what has happed in a time interval, we still need go through all the entry between players and teams.
+\subsection{Hash-based}
+After building hash index for players and teams, and loading the relation existing in time interval into memory, 
+we evaluate the same benchmark as well as in method of baseline. The trend in Fig.\ref{time} looks similar among four 
+kinds of queries, but you should note that the triks in y axis have droped down less than one second from dozens of 
+seconds in query HT, HR, HRT. But for the query REL processing, the cost is stil so high because of if we want to get 
+what has happed in a time interval, we still need going through all the entries between players and teams.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.0\textwidth]{pic/time-idx.png}\\
+	\includegraphics[width=1.0\textwidth]{pic/time_idx.pdf}\\
 	\caption{Hash-based: Four kinds of queries time}
 	\label{time}
 \end{figure}
 
 \subsection{Index for Time Interval}
-We just build sequential index easily, the performance of REL query gets a lot improve which reduce time cost from 100-plus
-seconds to less than one second. For showing the extensibility of our, we add the number of query to 10000. As show in \ref{test-add},
-the model still just need less than one second.
-
+We just build sequential index easily to solve the poor performance of REL query in the before method. The performance 
+of REL query gets a lot improve which reduce time cost from 100-plus seconds to less than one second as show in Fig.
+\ref{time-idx}. For showing the  extensibility of our methods, we add the four group test queries which have 10, 100, 
+1000, 10000 entries respectively. In the extensibility experiment, we use the logarithms in the horizontal axis following
+the nolinear increasement in number of queries. Therefore even if the trend in Fig.\ref{query} looks like exponential type, 
+it is stll linear time increasement. Besides the cost in queries is still so slow that we can get the results of queries less
+than one second even processing 10000 queries.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.0\textwidth]{pic/time.png}\\
+	\includegraphics[width=1.0\textwidth]{pic/time.pdf}\\
 	\caption{Index-time-interval: Four kinds of queries time}
 	\label{time-idx}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.0\textwidth]{pic/con.png}\\
+	\includegraphics[width=1.0\textwidth]{pic/query.pdf}\\
 	\caption{Four kinds of queries time}
-	\label{test-add}
+	\label{query}
+\end{figure}
+Moreover we summary the running time of four basic query in different size datasets using line chart. Due to the high time cost 
+in baseline, we just sum the 10 queries running time. As show in Fig.\ref{combine}, it is obviously the baseline need far more time
+than the other methods. The method of hash-based performs wonderful except in query REL. As described before,  we still need going 
+through all the entries between players and teams to get the cluster of event in a given time interval. After we build sequential
+index for time interval, this predicament in query REL has been solved.
+
+
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{pic/combine.pdf}\\
+	\caption{Four kinds of queries time}
+	\label{combine}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.0\textwidth]{pic/con.png}\\
-	\caption{Four kinds of queries time}
-	\label{con}
+	\includegraphics[width=1.0\textwidth]{pic/index.pdf}\\
+	\caption{Time of building index}
+	\label{index}
 \end{figure}
 
 % \textbf{Distribution of speed}. Speed is of critical importance to reflect the traffic conditions of a city and describe motion behaviors of moving objects. Shown in Fig.\ref{dis of speed bj}, most of historical trajectories have speed 3m/s-8m/s in Beijing. The distribution of speed of trajectories generated by RG is different from the given trajectories, and IP performs better than RG. The trajectory speed of GP concentrate on 4m/s-8m/s, which is similar to the original dataset.
@@ -153,23 +172,3 @@ the model still just need less than one second.
 % 	\caption{Distribution of trajectory features(origin)}
 % 	\label{origin}
 % \end{figure}
-
-
-\subsubsection{Efficiency} We also evaluate the efficiency of the proposed methods 
-by comparing the running time of them. Without surprise, the method RG needs least 
-running time, as it just synthesizes crossing trajectories directly and the number 
-of candidates is less than that of IP and GP. Furthermore, Table \ref{running time} 
-shows GP is much more efficient than IP, since the number of sub-trajectories generated by GP is much less than that generated by IP shown in table \ref{number of sub-tra}. The supplement method needs less time. However, the features of speed of origin data may lose in generation.
-%, which shows the necessity of the optimization in Section \ref{Optimization}.
-\begin{table}[H]
-	\centering
-	\caption{Running time}
-	\label{running time}
-	\begin{small}
-		\begin{tabular}{p{3cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.7cm}}
-			\hline
-			Method & RG & IP & GP &Supplement \\ \hline
-			Time cost (h:mm:ss) & 0:04:02 & 3:01:24 & 1:21:32 & 0:31:19 \\\hline
-		\end{tabular}
-	\end{small}
-\end{table}
