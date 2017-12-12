@@ -6,8 +6,13 @@ ind = np.array([5, 6, 7])  # the x locations for the groups
 width = 0.35       # the width of the bars
 fsize = 12
 format_f = 'eps'
-fig_s = (24,5)
+fig_s = (21,5)
 title_q = ('HF', 'RO', 'RH', 'FF')
+
+margin = {
+    'left': 0.06, 
+    'right':0.98
+}
 
 def import_data(fn, kind='query'):
     ret = []
@@ -37,7 +42,7 @@ def autoax(ax, title, data, labelx=''):
     ax.set_title(title)
     ax.set_xticks(ind)
     # autolabel(ax, rects)
-    plt.subplots_adjust(left=0.05, right=0.98)
+    plt.subplots_adjust(left=margin['left'], right=margin['right'])
     
 
 def autolabel(ax, rects):
@@ -83,19 +88,20 @@ def autoline(data, ax, title, i, idx=True, xlabel='Data Size(log)', ylabel=''):
         ax.plot(x, [0] + data[i][2], 'b--', label='10^7', marker='+')
     # ax.set_xticks(x, group_labels)
     ax.legend(bbox_to_anchor=[0.5, 1]) 
-    plt.subplots_adjust(left=0.05, right=0.98)
+    plt.subplots_adjust(left=margin['left'], right=margin['right'])
     
 
-def one_line_chat(data, fn, title='', xlabel='Data Size(log)', ylabel='time(s)'):
+def one_line_chart(data, fn, title='', xlabel='Data Size(log)', ylabel='time(s)'):
     plt.style.use('./tickstyle')
     with plt.style.context(('./tickstyle')):
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(6, 5.8))
         ax.set_title(title)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
         x = [0, 5, 6, 7]
         ax.plot(x, [0] + data, 'b-', marker='o')
-    plt.subplots_adjust(left=0.05, right=0.98)
+    plt.subplots_adjust(left=margin['left'], right=margin['right'])
+    # plt.show()
     plt.savefig(fn, format=format_f)
         
     
@@ -170,5 +176,5 @@ if __name__ == '__main__':
     # index line bar
     data_idx = import_data(ret_matrix_q, 'run runtime')
     data_idx = data_idx[0::9]
-    one_line_chat(data_idx, index)
+    one_line_chart(data_idx, index)
     print('Index plot complete.')
