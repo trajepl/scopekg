@@ -7,6 +7,7 @@ width = 0.35       # the width of the bars
 fsize = 12
 format_f = 'eps'
 fig_s = (24,5)
+title_q = ('HF', 'RO', 'RH', 'FF')
 
 def import_data(fn, kind='query'):
     ret = []
@@ -54,10 +55,10 @@ def barchar(data, fn):
     plt.style.use('./tickstyle')
     with plt.style.context(('./tickstyle')):
         fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=fig_s)
-        autoax(ax1, 'HT', data[0], 'time(s)')
-        autoax(ax2, 'REL', data[1])
-        autoax(ax3, 'HR', data[2])
-        autoax(ax4, 'HRT', data[3])
+        autoax(ax1, title_q[0], data[0], 'time(s)')
+        autoax(ax2, title_q[1], data[1])
+        autoax(ax3, title_q[2], data[2])
+        autoax(ax4, title_q[3], data[3])
     # plt.show()
     plt.savefig(fn, format=format_f)
 
@@ -102,10 +103,10 @@ def point_line(data, fn, idx=True):
     plt.style.use('./tickstyle')
     with plt.style.context(('./tickstyle')):
         fig, (ax1, ax2, ax3, ax4)  = plt.subplots(nrows=1, ncols=4, figsize=fig_s)
-        autoline(data, ax1, 'HT', 0, idx, ylabel='time(s)')
-        autoline(data, ax2, 'REL', 1, idx)
-        autoline(data, ax3, 'HR', 2, idx)
-        autoline(data, ax4, 'HRT', 3, idx)
+        autoline(data, ax1, title_q[0], 0, idx, ylabel='time(s)')
+        autoline(data, ax2, title_q[1], 1, idx)
+        autoline(data, ax3, title_q[2], 2, idx)
+        autoline(data, ax4, title_q[3], 3, idx)
     # plt.show()
     plt.savefig(fn, format=format_f)
     
