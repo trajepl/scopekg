@@ -5,7 +5,7 @@ N = 3
 ind = np.array([5, 6, 7])  # the x locations for the groups
 width = 0.35       # the width of the bars
 fsize = 12
-format_f = 'pdf'
+format_f = 'eps'
 fig_s = (24,5)
 
 def import_data(fn, kind='query'):
@@ -36,6 +36,7 @@ def autoax(ax, title, data, labelx=''):
     ax.set_title(title)
     ax.set_xticks(ind)
     # autolabel(ax, rects)
+    plt.subplots_adjust(left=0.05, right=0.98)
     
 
 def autolabel(ax, rects):
@@ -81,7 +82,8 @@ def autoline(data, ax, title, i, idx=True, xlabel='Data Size(log)', ylabel=''):
         ax.plot(x, [0] + data[i][2], 'b--', label='10^7', marker='+')
     # ax.set_xticks(x, group_labels)
     ax.legend(bbox_to_anchor=[0.5, 1]) 
-
+    plt.subplots_adjust(left=0.05, right=0.98)
+    
 
 def one_line_chat(data, fn, title='', xlabel='Data Size(log)', ylabel='time(s)'):
     plt.style.use('./tickstyle')
@@ -92,6 +94,7 @@ def one_line_chat(data, fn, title='', xlabel='Data Size(log)', ylabel='time(s)')
         ax.set_ylabel(ylabel)
         x = [0, 5, 6, 7]
         ax.plot(x, [0] + data, 'b-', marker='o')
+    plt.subplots_adjust(left=0.05, right=0.98)
     plt.savefig(fn, format=format_f)
         
     
